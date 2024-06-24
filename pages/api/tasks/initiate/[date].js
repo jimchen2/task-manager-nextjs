@@ -31,7 +31,7 @@ async function handler(req, res) {
             date: date,
             tasks: prevDailyTasks.tasks.map(task => ({
               title: task.title,
-              deadline: date, // Set deadline to the target date
+              deadline: task.deadline, 
               details: task.details,
               tag: task.tag
             }))
