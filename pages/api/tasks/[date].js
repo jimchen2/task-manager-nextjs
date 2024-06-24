@@ -1,5 +1,5 @@
-import dbConnect from '../../../lib/dbConnect';
-import DailyTasks from '../../../models/DailyTasks';
+import dbConnect from "../../../lib/dbConnect";
+import DailyTasks from "../../../models/DailyTasks";
 
 export default async function handler(req, res) {
   const { method } = req;
@@ -9,11 +9,13 @@ export default async function handler(req, res) {
   await dbConnect();
 
   switch (method) {
-    case 'GET':
+    case "GET":
       try {
-        const dailyTasks = await DailyTasks.findOne({ date: new Date(date) });
+        const dailyTasks = await DailyTasks.findOne({ date: date });
         if (!dailyTasks) {
-          return res.status(404).json({ success: false, error: 'No tasks found for this date' });
+          return res
+            .status(404)
+            .json({ success: false, error: "No tasks found for this date" });
         }
         res.status(200).json({ success: true, data: dailyTasks });
       } catch (error) {
@@ -21,17 +23,17 @@ export default async function handler(req, res) {
       }
       break;
 
-    case 'POST':
+    case "POST":
       try {
-        let dailyTasks = await DailyTasks.findOne({ date: new Date(date) });
+        let dailyTasks = await DailyTasks.findOne({ date: date });
         if (!dailyTasks) {
-          dailyTasks = new DailyTasks({ date: new Date(date), tasks: [] });
+          dailyTasks = new DailyTasks({ date: date, tasks: [] });
         }
         const newTask = {
           title: req.body.task.title,
-          deadline: req.body.task.deadline || new Date(date),
-          details: req.body.task.details || '',
-          tag: req.body.task.tag || 'other'
+          deadline: req.body.task.deadline || date,
+          details: req.body.task.details || "",
+          tag: req.body.task.tag || "other",
         };
         dailyTasks.tasks.push(newTask);
         await dailyTasks.save();
@@ -41,22 +43,28 @@ export default async function handler(req, res) {
       }
       break;
 
-    case 'PUT':
+    case "PUT":
       try {
-        const dailyTasks = await DailyTasks.findOne({ date: new Date(date) });
+        const dailyTasks = await DailyTasks.findOne({ date: date });
         if (!dailyTasks) {
-          return res.status(404).json({ success: false, error: 'No tasks found for this date' });
+          return res
+            .status(404)
+            .json({ success: false, error: "No tasks found for this date" });
         }
-        const taskIndex = dailyTasks.tasks.findIndex(task => task._id.toString() === taskId);
+        const taskIndex = dailyTasks.tasks.findIndex(
+          (task) => task._id.toString() === taskId
+        );
         if (taskIndex === -1) {
-          return res.status(404).json({ success: false, error: 'Task not found' });
+          return res
+            .status(404)
+            .json({ success: false, error: "Task not found" });
         }
-        dailyTasks.tasks[taskIndex] = { 
-          ...dailyTasks.tasks[taskIndex], 
-          title: req.body.task.title || dailyTasks.tasks[taskIndex].title,
-          deadline: req.body.task.deadline || dailyTasks.tasks[taskIndex].deadline,
+        dailyTasks.tasks[taskIndex] = {
+          ...dailyTasks.tasks[taskIndex],
+          deadline:
+            req.body.task.deadline || dailyTasks.tasks[taskIndex].deadline,
           details: req.body.task.details || dailyTasks.tasks[taskIndex].details,
-          tag: req.body.task.tag || dailyTasks.tasks[taskIndex].tag
+          tag: req.body.task.tag || dailyTasks.tasks[taskIndex].tag,
         };
         await dailyTasks.save();
         res.status(200).json({ success: true, data: dailyTasks });
@@ -64,14 +72,17 @@ export default async function handler(req, res) {
         res.status(400).json({ success: false, error: error.message });
       }
       break;
-
-    case 'DELETE':
+    case "DELETE":
       try {
-        const dailyTasks = await DailyTasks.findOne({ date: new Date(date) });
+        const dailyTasks = await DailyTasks.findOne({ date: date });
         if (!dailyTasks) {
-          return res.status(404).json({ success: false, error: 'No tasks found for this date' });
+          return res
+            .status(404)
+            .json({ success: false, error: "No tasks found for this date" });
         }
-        dailyTasks.tasks = dailyTasks.tasks.filter(task => task._id.toString() !== taskId);
+        dailyTasks.tasks = dailyTasks.tasks.filter(
+          (task) => task._id.toString() !== taskId
+        );
         await dailyTasks.save();
         res.status(200).json({ success: true, data: dailyTasks });
       } catch (error) {
@@ -80,7 +91,7 @@ export default async function handler(req, res) {
       break;
 
     default:
-      res.status(400).json({ success: false, error: 'Invalid method' });
+      res.status(400).json({ success: false, error: "Invalid method" });
       break;
   }
 }

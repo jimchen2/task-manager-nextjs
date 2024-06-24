@@ -1,114 +1,72 @@
-import { useState, useEffect } from 'react';
-import Head from 'next/head';
+import Head from "next/head";
+import useTasks from "../hooks/useTasks";
+import TaskSection from "../components/TaskSection";
+import LoadingSpinner from "../components/LoadingSpinner";
+import ErrorDisplay from "../components/ErrorDisplay";
+import AddTaskButton from "../components/AddTaskButton";
 
-export default function Home() {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState({ title: '', brief: '', deadline: '', tag: 'other' });
-  const [currentDate, setCurrentDate] = useState('');
+export default function Today() {
+  const date = new Date(
+    new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Shanghai",
+    })
+  );
+  const currentDate ="20240628"
+    // date.getFullYear().toString() +
+    // (date.getMonth() + 1).toString().padStart(2, "0") +
+    // date.getDate().toString().padStart(2, "0");
 
-  useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    setCurrentDate(today);
-    fetchTasks(today);
-  }, []);
+  const { tasks, loading, error, fetchTasks, handleTasksChange } =
+    useTasks(currentDate);
 
-  const fetchTasks = async (date) => {
-    const res = await fetch(`/api/tasks/${date}`);
-    const data = await res.json();
-    if (data.success) {
-      setTasks(data.data.tasks || []);
-    } else {
-      setTasks([]);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch(`/api/tasks/${currentDate}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tasks: [...tasks, newTask] }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      setTasks(data.data.tasks);
-      setNewTask({ title: '', brief: '', deadline: '', tag: 'other' });
-    }
-  };
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorDisplay message={error} />;
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+    <div className="min-h-screen bg-white py-6 px-4 sm:px-6 lg:px-8">
       <Head>
-        <title>Task Manager PWA</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <div className="max-w-md mx-auto">
-            <div className="divide-y divide-gray-200">
-              <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                <h2 className="text-3xl font-extrabold text-gray-900">Task Manager</h2>
-                <p className="text-xl">{currentDate}</p>
-                <ul className="list-disc space-y-2">
-                  {tasks.map((task, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="h-6 flex items-center sm:h-7">
-                        <svg className="flex-shrink-0 h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      </span>
-                      <p className="ml-2">
-                        <span className="font-bold">{task.title}</span> - {task.brief} ({task.tag})
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="pt-6 text-base leading-6 font-bold sm:text-lg sm:leading-7">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Task Title"
-                    value={newTask.title}
-                    onChange={(e) => setNewTask({...newTask, title: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="Brief Description"
-                    value={newTask.brief}
-                    onChange={(e) => setNewTask({...newTask, brief: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                  <input
-                    type="date"
-                    value={newTask.deadline}
-                    onChange={(e) => setNewTask({...newTask, deadline: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    required
-                  />
-                  <select
-                    value={newTask.tag}
-                    onChange={(e) => setNewTask({...newTask, tag: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="school">School</option>
-                    <option value="personal">Personal</option>
-                    <option value="other">Other</option>
-                  </select>
-                  <button type="submit" className="w-full px-4 py-2 text-white bg-cyan-500 rounded-md hover:bg-cyan-600">
-                    Add Task
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
+      <div className="max-w-7xl mx-auto">
+        <p className="text-xl mb-8">{currentDate}</p>
+        <div className="space-y-12">
+          <h2 className="text-xl font-light mb-4">School Tasks</h2>
+          <TaskSection
+            title="School"
+            tasks={tasks.school}
+            onTasksChange={(updatedTasks) =>
+              handleTasksChange("school", updatedTasks)
+            }
+            currentDate={currentDate}
+          />
+          <h2 className="text-xl font-light mb-4">Personal Tasks</h2>
+          <TaskSection
+            title="Personal"
+            tasks={tasks.personal}
+            onTasksChange={(updatedTasks) =>
+              handleTasksChange("personal", updatedTasks)
+            }
+            currentDate={currentDate}
+          />
+          <h2 className="text-xl font-light mb-4">Other Tasks</h2>
+          <TaskSection
+            title="Other"
+            tasks={tasks.other}
+            onTasksChange={(updatedTasks) =>
+              handleTasksChange("other", updatedTasks)
+            }
+            currentDate={currentDate}
+          />
         </div>
       </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <AddTaskButton onTaskAdded={fetchTasks} currentDate={currentDate} />
     </div>
   );
 }

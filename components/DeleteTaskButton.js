@@ -1,14 +1,14 @@
+// components/DeleteTaskButton.js
 import { useState } from 'react';
 
-export default function DeleteTaskButton({ task, onDelete }) {
+export default function DeleteTaskButton({ task, onDelete, currentDate }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       setIsDeleting(true);
       try {
-        const date = new Date(task.deadline).toISOString().split('T')[0];
-        const response = await fetch(`/api/tasks/${date}`, {
+        const response = await fetch(`/api/tasks/${currentDate}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -17,18 +17,12 @@ export default function DeleteTaskButton({ task, onDelete }) {
         });
 
         if (response.ok) {
-          const result = await response.json();
-          if (result.success) {
-            onDelete(task);
-          } else {
-            throw new Error(result.error || 'Failed to delete task');
-          }
+          onDelete(task);
         } else {
-          throw new Error('Failed to delete task');
+          console.error('Failed to delete task');
         }
       } catch (error) {
         console.error('Error deleting task:', error);
-        alert('Failed to delete task. Please try again.');
       } finally {
         setIsDeleting(false);
       }
@@ -38,8 +32,8 @@ export default function DeleteTaskButton({ task, onDelete }) {
   return (
     <button
       onClick={handleDelete}
-      className="text-red-600 hover:text-red-900 disabled:opacity-50"
       disabled={isDeleting}
+      className="ml-2 text-red-600 hover:text-red-900 disabled:opacity-50"
     >
       {isDeleting ? 'Deleting...' : 'Delete'}
     </button>

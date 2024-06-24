@@ -8,7 +8,7 @@ const taskSchema = new mongoose.Schema({
     trim: true
   },
   deadline: {
-    type: Date,
+    type: String,
     required: true
   },
   details: {
@@ -25,7 +25,7 @@ const taskSchema = new mongoose.Schema({
 // Define the DailyTasks schema
 const dailyTasksSchema = new mongoose.Schema({
   date: {
-    type: Date,
+    type: String,
     required: true,
     unique: true
   },
