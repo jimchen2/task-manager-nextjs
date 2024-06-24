@@ -1,3 +1,18 @@
+
+## Install 
+```sh
+# configure .env
+docker run -d --env-file .env -p 3025:3000 jimchen2/task-manager-nextjs:latest
+```
+
+## Build
+
+```sh
+# add Dockerfile
+docker build -t jimchen2/task-manager-nextjs .
+```
+
+
 ## Task Manager PWA
 
 - Tailwind CSS
@@ -9,18 +24,14 @@
    - Auto-copy the most previous day's tasks if today's empty
    - If no prev dates have any tasks
 2. Task schema
-   - Deadline, brief, details
+   - Deadline, brief
    - Single tag (school/other/personal)
 3. Tag management
-4. Historical view (read-only)
-   - Search previous dates
-5. Data export
 
 ### Task Structure:
 - Title
 - Deadline
 - Brief description
-- Detailed description
 - Tag
 
 ### Implementation:

@@ -1,7 +1,8 @@
 import dbConnect from "../../../lib/dbConnect";
 import DailyTasks from "../../../models/DailyTasks";
+import { authMiddleware } from '../../../middleware/authMiddleware';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { method } = req;
   const { date } = req.query;
   const { taskId } = req.body; // For PUT and DELETE operations on specific tasks
@@ -95,3 +96,5 @@ export default async function handler(req, res) {
       break;
   }
 }
+
+export default authMiddleware(handler);
