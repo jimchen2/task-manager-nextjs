@@ -11,10 +11,10 @@ export default function Today() {
       timeZone: "Asia/Shanghai",
     })
   );
-  const currentDate ="20240628"
-    // date.getFullYear().toString() +
-    // (date.getMonth() + 1).toString().padStart(2, "0") +
-    // date.getDate().toString().padStart(2, "0");
+  const currentDate =
+    date.getFullYear().toString() +
+    (date.getMonth() + 1).toString().padStart(2, "0") +
+    date.getDate().toString().padStart(2, "0");
 
   const { tasks, loading, error, fetchTasks, handleTasksChange } =
     useTasks(currentDate);
@@ -29,8 +29,8 @@ export default function Today() {
       </Head>
       <div className="max-w-7xl mx-auto">
         <p className="text-xl mb-8">{currentDate}</p>
-        <div className="space-y-12">
-          <h2 className="text-xl font-light mb-4">School Tasks</h2>
+        <div className="space-y-12 font-semibold">
+          <h2 className="text-xl mb-4">School Tasks</h2>
           <TaskSection
             title="School"
             tasks={tasks.school}
@@ -39,7 +39,7 @@ export default function Today() {
             }
             currentDate={currentDate}
           />
-          <h2 className="text-xl font-light mb-4">Personal Tasks</h2>
+          <h2 className="text-xl mb-4">Personal Tasks</h2>
           <TaskSection
             title="Personal"
             tasks={tasks.personal}
@@ -48,7 +48,7 @@ export default function Today() {
             }
             currentDate={currentDate}
           />
-          <h2 className="text-xl font-light mb-4">Other Tasks</h2>
+          <h2 className="text-xl mb-4">Other Tasks</h2>
           <TaskSection
             title="Other"
             tasks={tasks.other}

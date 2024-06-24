@@ -43,13 +43,13 @@ export default function TaskTable({ tasks: initialTasks, onTasksChange, currentD
 
   return (
     <div className="relative overflow-x-auto">
-      <table className="w-full table-fixed divide-y divide-gray-200">
+      <table className="w-full table-fixed divide-y divide-gray-200 text-gray-800">
         <thead className="bg-gray-50">
           <tr>
-            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
-            <th className="w-1/8 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deadline</th>
-            <th className="w-1/8 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
+            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Details</th>
+            <th className="w-1/8 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Deadline</th>
+            <th className="w-1/8 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
