@@ -2,7 +2,7 @@
 ## Install 
 ```sh
 # configure .env
-docker run -d --env-file .env -p 3025:3000 jimchen2/task-manager-nextjs:latest
+docker run -d --restart always --env-file .env -p 3025:3000 jimchen2/task-manager-nextjs:latest
 ```
 
 ## Build
