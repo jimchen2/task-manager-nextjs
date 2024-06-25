@@ -30,7 +30,7 @@ export default function Today() {
       <div className="max-w-7xl mx-auto">
         <p className="text-xl mb-8">{currentDate}</p>
         <div className="space-y-12 font-semibold">
-          <h2 className="text-xl mb-4">School Tasks</h2>
+          <h2 className="text-xl mb-4">School</h2>
           <TaskSection
             title="School"
             tasks={tasks.school}
@@ -39,7 +39,7 @@ export default function Today() {
             }
             currentDate={currentDate}
           />
-          <h2 className="text-xl mb-4">Personal Tasks</h2>
+          <h2 className="text-xl mb-4">Personal</h2>
           <TaskSection
             title="Personal"
             tasks={tasks.personal}
@@ -48,7 +48,7 @@ export default function Today() {
             }
             currentDate={currentDate}
           />
-          <h2 className="text-xl mb-4">Other Tasks</h2>
+          <h2 className="text-xl mb-4">Other</h2>
           <TaskSection
             title="Other"
             tasks={tasks.other}

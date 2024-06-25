@@ -1,7 +1,11 @@
 import { useState, useMemo } from "react";
 import DeleteTaskButton from "./DeleteTaskButton";
 
-export default function TaskTable({ tasks: initialTasks, onTasksChange, currentDate }) {
+export default function TaskTable({
+  tasks: initialTasks,
+  onTasksChange,
+  currentDate,
+}) {
   const [tasks, setTasks] = useState(initialTasks);
   const [expandedTask, setExpandedTask] = useState(null);
 
@@ -46,57 +50,73 @@ export default function TaskTable({ tasks: initialTasks, onTasksChange, currentD
       <table className="w-full table-fixed divide-y divide-gray-200 text-gray-800">
         <thead className="bg-gray-50">
           <tr>
-            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Title</th>
-            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Details</th>
-            <th className="w-1/8 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Deadline</th>
-            <th className="w-1/8 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+            <th className="w-1/2 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              Title
+            </th>
+            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              Deadline
+            </th>
+            <th className="w-1/4 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {sortedTasks.map((task) => (
-            <tr key={task._id}>
-              <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                {truncateText(task.title, 10)}
-                {task.title.length > 10 && (
-                  <button 
-                    onClick={() => toggleExpandTask(task)}
-                    className="ml-2 text-blue-500 hover:text-blue-700"
-                  >
-                    ...more
-                  </button>
-                )}
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-500">
-                <div>
-                  {truncateText(task.details || "-", 10)}
-                  {task.details && task.details.length > 10 && (
-                    <button 
+            <>
+              <tr key={task._id}>
+                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  {truncateText(task.title, 80)}
+                  {task.title.length > 30 && (
+                    <button
                       onClick={() => toggleExpandTask(task)}
                       className="ml-2 text-blue-500 hover:text-blue-700"
                     >
                       ...more
                     </button>
                   )}
-                </div>
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-500">{task.deadline}</td>
-              <td className="px-6 py-4 text-sm text-gray-500">
-                <DeleteTaskButton task={task} onDelete={handleDelete} currentDate={currentDate} />
-              </td>
-            </tr>
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {task.deadline}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500 font-semibold">
+                  <DeleteTaskButton
+                    task={task}
+                    onDelete={handleDelete}
+                    currentDate={currentDate}
+                  />
+                </td>
+              </tr>
+              {task.details && (
+                <tr>
+                  <td
+                    colSpan="3"
+                    className="px-6 py-2 text-xs font-normal	 text-gray-500"
+                  >
+                    {task.details}{" "}
+                  </td>
+                </tr>
+              )}
+            </>
           ))}
         </tbody>
       </table>
 
       {expandedTask && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" onClick={() => setExpandedTask(null)}>
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" onClick={e => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+          onClick={() => setExpandedTask(null)}
+        >
+          <div
+            className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="mt-3 text-center">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">{expandedTask.title}</h3>
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
+                {expandedTask.title}
+              </h3>
               <div className="mt-2 px-7 py-3">
-                <p className="text-sm text-gray-500">
-                  {expandedTask.details}
-                </p>
+                <p className="text-sm text-gray-500">{expandedTask.details}</p>
               </div>
               <div className="items-center px-4 py-3">
                 <button
