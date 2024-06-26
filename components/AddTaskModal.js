@@ -47,7 +47,7 @@ export default function AddTaskModal({ onClose, onTaskAdded, currentDate }) {
           onClose();
         }
       } else {
-        console.error("Failed to add task");
+        alert(response.statusText);
       }
     } catch (error) {
       console.error("Error adding task:", error);

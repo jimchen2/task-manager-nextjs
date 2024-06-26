@@ -10,9 +10,17 @@ export function authMiddleware(handler) {
     const { cookies } = req;
     const authToken = cookies.authToken;
 
-    // Use the PASSWORD from environment variables
-    if (authToken !== process.env.PASSWORD) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+    // Check if it's a GET request
+    if (req.method === 'GET') {
+      // For GET requests, allow both admin and view passwords
+      if (authToken !== process.env.ADMIN_PASSWORD && authToken !== process.env.VIEW_PASSWORD) {
+        return res.status(401).json({ success: false, error: 'Unauthorized' });
+      }
+    } else {
+      // For non-GET requests, only allow admin password
+      if (authToken !== process.env.ADMIN_PASSWORD) {
+        return res.status(401).json({ success: false, error: 'Unauthorized' });
+      }
     }
 
     return handler(req, res);
