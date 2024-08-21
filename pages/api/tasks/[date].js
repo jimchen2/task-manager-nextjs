@@ -32,7 +32,7 @@ async function handler(req, res) {
         }
         const newTask = {
           title: req.body.task.title,
-          deadline: req.body.task.deadline || date,
+          deadline: req.body.task.deadline || 99999999,
           details: req.body.task.details || "",
           tag: req.body.task.tag || "other",
         };

@@ -35,7 +35,7 @@ export default function AddTaskModal({ onClose, onTaskAdded, currentDate }) {
             title,
             details,
             tag,
-            deadline: deadline || currentDate,
+            deadline,
           },
         }),
       });
